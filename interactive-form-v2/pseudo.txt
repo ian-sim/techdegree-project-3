@@ -1,0 +1,8 @@
+DISPLAYING APPROPRIATE COLORS BASED ON THE DESIGN THEME SELECTED - simple approach
+for each item in color dropdown menu
+    if design.value = "";
+        display 'please select a theme'
+    else if design.value = js puns
+        display color options for js puns
+    else 
+        display options for i heart js
