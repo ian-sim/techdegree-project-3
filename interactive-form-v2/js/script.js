@@ -11,9 +11,9 @@ otherTitle.style.display = "none";
 const titleDropdown = document.querySelector("#title");
 titleDropdown.addEventListener("change", () => {
 	if (titleDropdown.value === "other") {
-		otherTitle.style.display = "inherit";
+		showElement(otherTitle);
 	} else {
-		otherTitle.style.display = "none";
+		hideElement(otherTitle);
 	}
 });
 
@@ -37,6 +37,11 @@ function createAssign(
 // Create function to hide element
 function hideElement(elementName) {
 	elementName.style.display = "none";
+}
+
+// Create function to show element
+function showElement(elementName) {
+	elementName.style.display = "inherit";
 }
 
 // Create function to hide multiple elements
@@ -67,8 +72,6 @@ const colorSelect = document.querySelector("#color");
 const firstColorOption = colorSelect.firstElementChild;
 colorSelect.insertBefore(selectThemeMsg, firstColorOption);
 
-// Hide 'Select Theme'
-
 // Hide color options intially
 hideMultiple(colorSelect);
 
@@ -92,11 +95,11 @@ designDropdown.addEventListener("change", () => {
 			) {
 				displayed.push(colorSelect[i]);
 			} else {
-				colorSelect[i].style.display = "none";
+				hideElement(colorSelect[i]);
 			}
 		}
 		for (let j = 0; j < displayed.length; j++) {
-			displayed[j].style.display = "inherit";
+			showElement(displayed[j]);
 		}
 		colorSelect.value = displayed[0].value;
 	}
@@ -124,7 +127,7 @@ function calcTotal(list) {
 		}
 	}
 	if (activitiesTotal > 0) {
-		displayTotal.style.display = "inherit";
+		showElement(displayTotal);
 		displayTotal.textContent = `Total:	$${activitiesTotal}`;
 	} else {
 		hideElement(displayTotal);
@@ -153,4 +156,37 @@ activitiesSection.addEventListener("change", (e) => {
 	const input = e.target;
 	calcTotal(checkboxList);
 	conflictCheck(input, checkboxList);
+});
+
+// PAYMENT INFO SECTION
+const creditCardInfo = document.querySelector("#credit-card");
+const paypalInfo = document.querySelector("#paypal");
+const bitcoinInfo = document.querySelector("#bitcoin");
+hideElement(paypalInfo);
+hideElement(bitcoinInfo);
+// Hide 'Select payment method' option
+const selectPaymentMethod = document.querySelector(
+	'option[value="select method"]'
+);
+hideElement(selectPaymentMethod);
+
+// Set credit card as default payment option
+const creditCardOption = document.querySelector('option[value="credit card"');
+const paymentDropdown = document.querySelector("#payment");
+
+// Create handler to display payment options based on selection
+paymentDropdown.addEventListener("change", () => {
+	if (paymentDropdown.value === "credit card") {
+		showElement(creditCardInfo);
+		hideElement(paypalInfo);
+		hideElement(bitcoinInfo);
+	} else if (paymentDropdown.value === "paypal") {
+		showElement(paypalInfo);
+		hideElement(creditCardInfo);
+		hideElement(bitcoinInfo);
+	} else if (paymentDropdown.value === "bitcoin") {
+		showElement(bitcoinInfo);
+		hideElement(creditCardInfo);
+		hideElement(paypalInfo);
+	}
 });
