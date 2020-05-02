@@ -126,9 +126,10 @@ displayTotal.addEventListener("change", () => {
 
 // Create function to calculate total cost of activities
 function calcTotal(list) {
+	activitiesTotal = 0;
 	for (let i = 0; i < list.length; i++) {
 		if (list[i].checked) {
-			activitiesTotal += list[i]["data-cost"];
+			activitiesTotal += parseInt(list[i].dataset.cost);
 		}
 	}
 }
@@ -142,9 +143,7 @@ function toggleDisabled(target) {
 function conflictCheck(target, comparisonList) {
 	for (let i = 0; i < comparisonList.length; i++) {
 		if (!comparisonList[i].checked) {
-			if (
-				target["data-day-and-time"] === comparisonList[i]["data-day-and-time"]
-			) {
+			if (target.dataset.DayAndTime === comparisonList[i].dataset.DayAndTime) {
 				toggleDisabled(comparisonList[i]);
 			}
 		}
@@ -153,7 +152,6 @@ function conflictCheck(target, comparisonList) {
 
 // Create event listener for activities section
 const checkboxList = document.querySelectorAll(".activities > label > input");
-console.log(checkboxList);
 activitiesSection.addEventListener("change", (e) => {
 	const input = e.target;
 	calcTotal(checkboxList);
