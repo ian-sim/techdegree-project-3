@@ -115,15 +115,6 @@ hideElement(displayTotal);
 const activitiesSection = document.querySelector(".activities");
 activitiesSection.appendChild(displayTotal);
 
-// Create handler to display total when greater than $0
-displayTotal.addEventListener("change", () => {
-	if (activitiesTotal > 0) {
-		displayTotal.style.display = "inherit";
-	} else {
-		hideElement(displayTotal);
-	}
-});
-
 // Create function to calculate total cost of activities
 function calcTotal(list) {
 	activitiesTotal = 0;
@@ -131,6 +122,12 @@ function calcTotal(list) {
 		if (list[i].checked) {
 			activitiesTotal += parseInt(list[i].dataset.cost);
 		}
+	}
+	if (activitiesTotal > 0) {
+		displayTotal.style.display = "inherit";
+		displayTotal.textContent = `Total:	$${activitiesTotal}`;
+	} else {
+		hideElement(displayTotal);
 	}
 }
 
@@ -142,8 +139,8 @@ function toggleDisabled(target) {
 // Create function to check for conflicts
 function conflictCheck(target, comparisonList) {
 	for (let i = 0; i < comparisonList.length; i++) {
-		if (!comparisonList[i].checked) {
-			if (target.dataset.DayAndTime === comparisonList[i].dataset.DayAndTime) {
+		if (target !== comparisonList[i]) {
+			if (target.dataset.dayAndTime === comparisonList[i].dataset.dayAndTime) {
 				toggleDisabled(comparisonList[i]);
 			}
 		}
@@ -155,5 +152,5 @@ const checkboxList = document.querySelectorAll(".activities > label > input");
 activitiesSection.addEventListener("change", (e) => {
 	const input = e.target;
 	calcTotal(checkboxList);
-	console.log(activitiesTotal);
+	conflictCheck(input, checkboxList);
 });
