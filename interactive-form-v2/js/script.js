@@ -17,6 +17,23 @@ titleDropdown.addEventListener("change", () => {
 	}
 });
 
+// Create function to create, append and assign property values to an element
+function createAssign(
+	elementName,
+	property1 = "",
+	value1 = "",
+	property2 = "",
+	value2 = "",
+	property3 = "",
+	value3 = ""
+) {
+	const element = document.createElement(elementName);
+	element[property1] = value1;
+	element[property2] = value2;
+	element[property3] = value3;
+	return element;
+}
+
 // Create function to hide element
 function hideElement(elementName) {
 	elementName.style.display = "none";
@@ -29,36 +46,116 @@ function hideMultiple(elementList) {
 	}
 }
 
-// Create 'please select' option for color dropdown
-const colorDropdown = document.querySelector("#color");
-const selectThemeMessage = document.createElement("option");
-selectThemeMessage.selected = true;
-selectThemeMessage.textContent = "Please select a theme";
-const firstColorOption = colorDropdown.firstElementChild;
-colorDropdown.insertBefore(selectThemeMessage, firstColorOption);
+// Create object to store design options key, value pairs
+const designOptionsObject = {};
+const designOptions = document.querySelectorAll("#design option[value]");
+for (let i = 0; i < designOptions.length; i++) {
+	designOptionsObject[designOptions[i].value] = designOptions[
+		i
+	].textContent.slice(8);
+}
 
-// Hide color dropdown options initially
-hideMultiple(colorDropdown);
+// Create and insert 'please select' message to color dropdown menu
+const selectThemeMsg = createAssign(
+	"option",
+	"textContent",
+	"Please select a T-shirt theme",
+	"selected",
+	true
+);
+const colorSelect = document.querySelector("#color");
+const firstColorOption = colorSelect.firstElementChild;
+colorSelect.insertBefore(selectThemeMsg, firstColorOption);
 
-// Create listener for design drop down selection
+// Hide 'Select Theme'
+
+// Hide color options intially
+hideMultiple(colorSelect);
+
+// Create handler for change in design theme dropdown
+let displayed = [];
 const designDropdown = document.querySelector("#design");
 designDropdown.addEventListener("change", () => {
-	hideMultiple(colorDropdown);
-	if (designDropdown.value === "js puns") {
-		selectThemeMessage.hidden = true;
-		for (let i = 0; i < colorDropdown.length; i++) {
-			if (i < 4) {
-				colorDropdown[i].style.display = "inherit";
-			}
-		}
-	} else if (designDropdown.value === "heart js") {
-		selectThemeMessage.hidden = true;
-		for (let i = 0; i < colorDropdown.length; i++) {
-			if (i >= 4) {
-				colorDropdown[i].style.display = "inherit";
-			}
-		}
+	displayed = [];
+	if (designDropdown.value === "Select Theme") {
+		hideMultiple(colorSelect);
+		selectThemeMsg.hidden = false;
+		selectThemeMsg.selected = true;
 	} else {
-		selectThemeMessage.hidden = false;
+		selectThemeMsg.hidden = true;
+		selectThemeMsg.selected = false;
+		for (let i = 0; i < colorSelect.length; i++) {
+			if (
+				colorSelect[i].textContent.includes(
+					designOptionsObject[designDropdown.value]
+				)
+			) {
+				displayed.push(colorSelect[i]);
+			} else {
+				colorSelect[i].style.display = "none";
+			}
+		}
+		for (let j = 0; j < displayed.length; j++) {
+			displayed[j].style.display = "inherit";
+		}
+		colorSelect.value = displayed[0].value;
 	}
+});
+
+// ACTIVITIES CHECKBOX SECTION
+
+// Create activitiesTotal variable and element to display total
+let activitiesTotal = 0;
+const displayTotal = createAssign(
+	"label",
+	"textContent",
+	`Total:	$${activitiesTotal}`
+);
+hideElement(displayTotal);
+const activitiesSection = document.querySelector(".activities");
+activitiesSection.appendChild(displayTotal);
+
+// Create handler to display total when greater than $0
+displayTotal.addEventListener("change", () => {
+	if (activitiesTotal > 0) {
+		displayTotal.style.display = "inherit";
+	} else {
+		hideElement(displayTotal);
+	}
+});
+
+// Create function to calculate total cost of activities
+function calcTotal(list) {
+	for (let i = 0; i < list.length; i++) {
+		if (list[i].checked) {
+			activitiesTotal += list[i]["data-cost"];
+		}
+	}
+}
+
+// Create function to toggle disabled attribute
+function toggleDisabled(target) {
+	target.disabled ? (target.disabled = false) : (target.disabled = true);
+}
+
+// Create function to check for conflicts
+function conflictCheck(target, comparisonList) {
+	for (let i = 0; i < comparisonList.length; i++) {
+		if (!comparisonList[i].checked) {
+			if (
+				target["data-day-and-time"] === comparisonList[i]["data-day-and-time"]
+			) {
+				toggleDisabled(comparisonList[i]);
+			}
+		}
+	}
+}
+
+// Create event listener for activities section
+const checkboxList = document.querySelectorAll(".activities > label > input");
+console.log(checkboxList);
+activitiesSection.addEventListener("change", (e) => {
+	const input = e.target;
+	calcTotal(checkboxList);
+	console.log(activitiesTotal);
 });

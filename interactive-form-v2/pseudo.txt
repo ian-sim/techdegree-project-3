@@ -1,8 +1,39 @@
-DISPLAYING APPROPRIATE COLORS BASED ON THE DESIGN THEME SELECTED - simple approach
-for each item in color dropdown menu
-    if design.value = "";
-        display 'please select a theme'
-    else if design.value = js puns
-        display color options for js puns
-    else 
-        display options for i heart js
+DISPLAYING APPROPRIATE COLORS BASED ON THE DESIGN THEME SELECTED - DYNAMIC APPROACH
+
+create designOptions object
+select options with value property under design id
+iterate over options 
+    select textContent and use slice() to remove 'Theme - '
+    select value of options
+    store value of option in object as key
+    store trimmed textContent as value
+
+create handler for 'change' in design select value
+when value changes:
+    if value = select Theme
+        display 'please select theme' message
+    else
+    for each option in color dropdown
+        if option.includes(object[design.value]) = true
+            set hidden property = false;
+        else 
+            set hidden property = true; 
+
+FUNCTIONALITY FOR CHECKBOXES IN ACTIVITIES SECTION
+create total cost variable
+create function for conflict check
+create function for toggleDisabled()
+
+set event listener on fieldset
+    check if e.target has been selected or not
+        if already selected 
+            remove selected class 
+            adjust total cost
+            set disabled attr of any conflicting checkboxes to false
+        else
+            add cost to Total cost 
+            apply selected class 
+            check if other checkboxes conflict
+            if conflicts
+                set class of conflicting checkboxes to disabled
+              
