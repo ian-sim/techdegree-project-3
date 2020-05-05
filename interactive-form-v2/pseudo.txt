@@ -38,3 +38,28 @@ set event listener on fieldset
                 set class of conflicting checkboxes to disabled
               
 
+FORM VALIDATION
+add event listener to submit button of mousedown..?
+    if name input field is blank
+        e.target.preventDefault()
+    else if email field not formatted correctly
+        e.target.preventDefault()
+    else if no activities selected
+        e.target.preventDefault()
+    else if payment method is credit card
+        if any of the inputs are empty
+            e.target.preventDefault()
+        else if card number is not between 13 and 16 designOptions
+            e.target.preventDefault()
+        else if zip code value is not 5 digits long
+            e.target.preventDefault()
+        else if CVV number is not exactly 3 digits long
+            e.target.preventDefault()
+
+VALIDATION AND ERROR COMBO
+create function to insert label or p tag using insertBefore(). Use parentNode and nextElementSibling to get elements for insertBefore
+create empty array for incorrect input fields
+check value of each input field
+    if input is not correct
+        push array to array containing element selected and message specific for element at indices [0,1] 
+        e.g inputErrorList.push([nameInput, 'Please enter your name.']);

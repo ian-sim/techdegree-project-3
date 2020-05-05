@@ -172,6 +172,7 @@ hideElement(selectPaymentMethod);
 
 // Set credit card as default payment option
 const creditCardOption = document.querySelector('option[value="credit card"');
+creditCardOption.selected = true;
 const paymentDropdown = document.querySelector("#payment");
 
 // Create handler to display payment options based on selection
@@ -190,3 +191,88 @@ paymentDropdown.addEventListener("change", () => {
 		hideElement(paypalInfo);
 	}
 });
+
+// FORM VALIDATION SECTION
+
+// Create function to check field for user input
+function userInputCheck(inputField) {
+	if (inputField.value === "") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+// Create function to validate email format
+function checkEmailFormat(email) {
+	return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
+}
+
+// Create function to check activities checked property
+function checkActivities() {
+	for (let i = 0; i < checkboxList.length; i++) {
+		if (checkboxList[i].checked) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// Cretae function to check payment method and required fields
+function ccValidation() {
+	if (paymentDropdown.value === "credit card") {
+		if (userInputCheck(ccNumberInput)) {
+			return true;
+		} else if (ccNumberInput.value.length < 13 || ccNumberInput.length > 16) {
+			return true;
+		} else if (userInputCheck(zipInput)) {
+			return true;
+		} else if (zipInput.value.length !== 5) {
+			return true;
+		} else if (userInputCheck(cvvInput)) {
+			return true;
+		} else if (cvvInput.value.length !== 3) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+
+// Create variables needed for form validation
+const confForm = document.querySelector("form");
+const nameInput = document.querySelector("#name");
+const emailInput = document.querySelector("#mail");
+const ccNumberInput = document.querySelector("#cc-num");
+const zipInput = document.querySelector("#zip");
+const cvvInput = document.querySelector("#cvv");
+const activitiesTitle = document.querySelector(
+	'legend[text-content="Register for Activities"'
+);
+
+// Create handler for form submission
+confForm.addEventListener("submit", (e) => {
+	if (userInputCheck(nameInput)) {
+		e.preventDefault();
+		inputError(nameInput);
+	}
+	if (!checkEmailFormat(emailInput)) {
+		e.preventDefault();
+		inputError(emailInput);
+	}
+	if (checkActivities()) {
+		e.preventDefault();
+		inputError(activitiesTitle);
+	}
+	if (ccValidation()) {
+		e.preventDefault();
+		inputError(creditCardInfo);
+	}
+});
+
+// Create function for higlighting missing/incorrect input
+function inputError(inputField) {
+	inputField.style.backgroundColor = "#E65B5B";
+}
