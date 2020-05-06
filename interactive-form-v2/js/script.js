@@ -200,9 +200,10 @@ function errorMessage(message) {
 		"p",
 		"className",
 		"error",
-		"textContent",
-		message
+		"innerHTML",
+		`<span>&#9888;</span> ${message}`
 	);
+	return errorLabel;
 }
 
 // Function to create and append cc error message
@@ -213,7 +214,7 @@ function ccErrorAppend(message) {
 
 // Create function to check field for user input
 function userInputCheck(inputField) {
-	if (inputField.value === "") {
+	if (inputField.value === "" || inputField.value === null) {
 		return true;
 	} else {
 		return false;
@@ -223,9 +224,10 @@ function userInputCheck(inputField) {
 // Function to check name input
 function nameCheck(input) {
 	if (userInputCheck(input)) {
-		const errorLabel = errorMessage("Please enter your name.");
-		const nameLabel = document.querySelector('label[for="name"]');
-		nameLabel.appendChild(errorLabel);
+		const errorLabel = errorMessage("Please enter your name");
+		const parent = input.parentNode;
+		const sibling = input.nextElementSibling;
+		parent.insertBefore(errorLabel, sibling);
 		return false;
 	} else {
 		return true;
@@ -234,10 +236,11 @@ function nameCheck(input) {
 
 // Function to check email input
 function emailCheck(input) {
-	if (/^[^@]+@[^@.]+\.[a-z]+$/i.test(input)) {
-		const errorLabel = errorMessage("Please enter a valid email address.");
-		const mailLabel = document.querySelector('label[for="mail"]');
-		mailLabel.appendChild(errorLabel);
+	if (!/^[^@]+@[^@.]+\.[a-z]+$/i.test(input.value)) {
+		const errorLabel = errorMessage("Please enter a valid email address");
+		const parent = input.parentNode;
+		const sibling = input.nextElementSibling;
+		parent.insertBefore(errorLabel, sibling);
 		return false;
 	} else {
 		return true;
@@ -251,7 +254,7 @@ function checkActivities() {
 			return true;
 		}
 	}
-	const errorLabel = errorMessage("Please select at least 1 activity.");
+	const errorLabel = errorMessage("Please select at least 1 activity");
 	activitiesSection.appendChild(errorLabel);
 	return false;
 }
@@ -263,20 +266,20 @@ function ccValidation() {
 		return false;
 	} else if (ccNumberInput.value.length < 13 || ccNumberInput.length > 16) {
 		ccErrorAppend(
-			"Please enter a number that is between 13 and 16 digits long."
+			"Please enter a number that is between 13 and 16 digits long"
 		);
 		return false;
 	} else if (userInputCheck(zipInput)) {
-		ccErrorAppend("Please enter a zip code.");
+		ccErrorAppend("Please enter a zip code");
 		return false;
 	} else if (zipInput.value.length !== 5) {
-		ccErrorAppend("Please enter a 5 digit zip code.");
+		ccErrorAppend("Please enter a 5 digit zip code");
 		return false;
 	} else if (userInputCheck(cvvInput)) {
-		ccErrorAppend("Please enter a CVV number.");
+		ccErrorAppend("Please enter a CVV number");
 		return false;
 	} else if (cvvInput.value.length !== 3) {
-		ccErrorAppend("Please enter a 3 digit CVV number.");
+		ccErrorAppend("Please enter a 3 digit CVV number");
 		return false;
 	} else {
 		return true;
@@ -291,6 +294,23 @@ const ccNumberInput = document.querySelector("#cc-num");
 const zipInput = document.querySelector("#zip");
 const cvvInput = document.querySelector("#cvv");
 
+// Function to run all individual field validations
+function validateAll() {
+	const validationResults = [];
+	validationResults.push(nameCheck(nameInput));
+	validationResults.push(emailCheck(emailInput));
+	validationResults.push(checkActivities());
+	if (paymentDropdown.value === "credit card") {
+		validationResults.push(ccValidation());
+	}
+	for (let i = 0; i < validationResults.length; i++) {
+		if (validationResults[i] === false) {
+			return false;
+		}
+	}
+	return true;
+}
+
 // Create handler for form submission
 confForm.addEventListener("submit", (e) => {
 	// Remove previous error messages
@@ -302,15 +322,7 @@ confForm.addEventListener("submit", (e) => {
 		}
 	}
 	// Validate user inputs
-	if (nameCheck(nameInput) && emailCheck(emailInput) && checkActivities()) {
-		if (paymentDropdown.value === "credit card") {
-			if (ccValidation()) {
-				e.preventDefault();
-			} else {
-				e.preventDefault();
-			}
-		}
-	} else {
+	if (!validateAll()) {
 		e.preventDefault();
 	}
 });

@@ -181,8 +181,23 @@ option {
 }
 
 .error {
-	color: #aa3939;
-	font-size: 1.1em;
+	color: #df6363;
+	font-size: 1.2em;
+	margin: 0 0 15px 0;
+	animation-name: pulse;
+	animation-duration: 1.6s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-timing-function: ease-out;
+}
+
+@keyframes pulse {
+	0% {
+		color: #994949;
+	}
+	100% {
+		color: #df6363;
+	}
 }
 
 /* ================================= 
