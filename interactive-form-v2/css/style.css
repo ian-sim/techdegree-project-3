@@ -2,26 +2,26 @@
   Base Element Styles
 ==================================== */
 
-@import url('https://fonts.googleapis.com/css?family=Nunito|Roboto+Mono');
+@import url("https://fonts.googleapis.com/css?family=Nunito|Roboto+Mono");
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body,
 input,
 button {
-	font-family: 'Nunito', sans-serif;
+	font-family: "Nunito", sans-serif;
 }
 
 body {
-  font: 1em/1.5;
-  color: rgba(6, 49, 68, 0.9);
-	background: #CDE0FB;
+	font: 1em/1.5;
+	color: rgba(6, 49, 68, 0.9);
+	background: #cde0fb;
 }
 
 header {
-	text-align: center;  
+	text-align: center;
 }
 
 h1 {
@@ -31,7 +31,7 @@ h1 {
 }
 
 a {
-  text-decoration: none;
+	text-decoration: none;
 }
 
 /* ================================= 
@@ -39,8 +39,8 @@ a {
 ==================================== */
 
 form {
-	padding: .875em 1.875em 1.875em;
-	background: #9BBEEF;
+	padding: 0.875em 1.875em 1.875em;
+	background: #9bbeef;
 	border: 2px solid rgba(8, 63, 87, 0.6);
 	border-radius: 3px;
 }
@@ -58,12 +58,12 @@ fieldset {
 
 legend,
 button {
-	font-size: 1.25em;	
+	font-size: 1.25em;
 }
 
 legend {
 	font-weight: bold;
-	padding-top: .5em;
+	padding-top: 0.5em;
 	border-top: 2px solid rgba(8, 63, 87, 0.6);
 	margin-bottom: 1.125em;
 }
@@ -77,18 +77,18 @@ legend {
 label {
 	color: #000;
 	display: block;
-	margin-bottom: .5em;
+	margin-bottom: 0.5em;
 }
 
 input,
 select {
-	margin-bottom: 1.125em;	
+	margin-bottom: 1.125em;
 }
 
 input {
 	font-size: 1em;
 	font-weight: 500;
-	padding: .8em;
+	padding: 0.8em;
 	background: #e9f6fb;
 	border: 2px solid rgb(111, 157, 220);
 	border-radius: 3px;
@@ -98,7 +98,7 @@ input {
 input:focus {
 	background: #fff;
 	border-color: #5e97b0;
-	transition: border-color .4s, background-color .4s;
+	transition: border-color 0.4s, background-color 0.4s;
 }
 
 input[type="checkbox"],
@@ -108,9 +108,9 @@ input[type="radio"] {
 
 button {
 	color: #fff;
-	padding: .55em 1.25em;
+	padding: 0.55em 1.25em;
 	background: #083f57;
-	margin: 1.25em 0 .5em;
+	margin: 1.25em 0 0.5em;
 	cursor: pointer;
 	border: 2px solid black;
 	border-radius: 4px;
@@ -118,13 +118,13 @@ button {
 }
 
 button:hover {
-	background: #6F9DDC;
+	background: #6f9ddc;
 }
 
-input, 
-select, 
+input,
+select,
 option {
-	font-family: 'roboto', sans-serif;
+	font-family: "roboto", sans-serif;
 }
 
 /* ================================= 
@@ -138,7 +138,7 @@ option {
 
 .shirt div {
 	float: left;
-	margin-right: .85em;
+	margin-right: 0.85em;
 }
 
 .shirt-box {
@@ -175,9 +175,14 @@ option {
 }
 
 .clearfix::after {
-  content: " ";
-  display: table;
-  clear: both;
+	content: " ";
+	display: table;
+	clear: both;
+}
+
+.error {
+	color: #aa3939;
+	font-size: 1.1em;
 }
 
 /* ================================= 

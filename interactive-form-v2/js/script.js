@@ -194,6 +194,23 @@ paymentDropdown.addEventListener("change", () => {
 
 // FORM VALIDATION SECTION
 
+// Function for creating and inserting validation messages
+function errorMessage(message) {
+	const errorLabel = createAssign(
+		"p",
+		"className",
+		"error",
+		"textContent",
+		message
+	);
+}
+
+// Function to create and append cc error message
+function ccErrorAppend(message) {
+	const errorLabel = errorMessage(message);
+	creditCardInfo.appendChild(errorLabel);
+}
+
 // Create function to check field for user input
 function userInputCheck(inputField) {
 	if (inputField.value === "") {
@@ -203,9 +220,28 @@ function userInputCheck(inputField) {
 	}
 }
 
-// Create function to validate email format
-function checkEmailFormat(email) {
-	return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
+// Function to check name input
+function nameCheck(input) {
+	if (userInputCheck(input)) {
+		const errorLabel = errorMessage("Please enter your name.");
+		const nameLabel = document.querySelector('label[for="name"]');
+		nameLabel.appendChild(errorLabel);
+		return false;
+	} else {
+		return true;
+	}
+}
+
+// Function to check email input
+function emailCheck(input) {
+	if (/^[^@]+@[^@.]+\.[a-z]+$/i.test(input)) {
+		const errorLabel = errorMessage("Please enter a valid email address.");
+		const mailLabel = document.querySelector('label[for="mail"]');
+		mailLabel.appendChild(errorLabel);
+		return false;
+	} else {
+		return true;
+	}
 }
 
 // Create function to check activities checked property
@@ -215,29 +251,35 @@ function checkActivities() {
 			return true;
 		}
 	}
+	const errorLabel = errorMessage("Please select at least 1 activity.");
+	activitiesSection.appendChild(errorLabel);
 	return false;
 }
 
-// Cretae function to check payment method and required fields
+// Create function to check payment method and required fields
 function ccValidation() {
-	if (paymentDropdown.value === "credit card") {
-		if (userInputCheck(ccNumberInput)) {
-			return true;
-		} else if (ccNumberInput.value.length < 13 || ccNumberInput.length > 16) {
-			return true;
-		} else if (userInputCheck(zipInput)) {
-			return true;
-		} else if (zipInput.value.length !== 5) {
-			return true;
-		} else if (userInputCheck(cvvInput)) {
-			return true;
-		} else if (cvvInput.value.length !== 3) {
-			return true;
-		} else {
-			return false;
-		}
-	} else {
+	if (userInputCheck(ccNumberInput)) {
+		ccErrorAppend("Please enter a credit card number.");
 		return false;
+	} else if (ccNumberInput.value.length < 13 || ccNumberInput.length > 16) {
+		ccErrorAppend(
+			"Please enter a number that is between 13 and 16 digits long."
+		);
+		return false;
+	} else if (userInputCheck(zipInput)) {
+		ccErrorAppend("Please enter a zip code.");
+		return false;
+	} else if (zipInput.value.length !== 5) {
+		ccErrorAppend("Please enter a 5 digit zip code.");
+		return false;
+	} else if (userInputCheck(cvvInput)) {
+		ccErrorAppend("Please enter a CVV number.");
+		return false;
+	} else if (cvvInput.value.length !== 3) {
+		ccErrorAppend("Please enter a 3 digit CVV number.");
+		return false;
+	} else {
+		return true;
 	}
 }
 
@@ -248,31 +290,27 @@ const emailInput = document.querySelector("#mail");
 const ccNumberInput = document.querySelector("#cc-num");
 const zipInput = document.querySelector("#zip");
 const cvvInput = document.querySelector("#cvv");
-const activitiesTitle = document.querySelector(
-	'legend[text-content="Register for Activities"'
-);
 
 // Create handler for form submission
 confForm.addEventListener("submit", (e) => {
-	if (userInputCheck(nameInput)) {
-		e.preventDefault();
-		inputError(nameInput);
+	// Remove previous error messages
+	const prevError = document.querySelectorAll(".error");
+	if (prevError.length > 0) {
+		for (let i = 0; i < prevError.length; i++) {
+			const parent = prevError[i].parentNode;
+			parent.removeChild(prevError[i]);
+		}
 	}
-	if (!checkEmailFormat(emailInput)) {
+	// Validate user inputs
+	if (nameCheck(nameInput) && emailCheck(emailInput) && checkActivities()) {
+		if (paymentDropdown.value === "credit card") {
+			if (ccValidation()) {
+				e.preventDefault();
+			} else {
+				e.preventDefault();
+			}
+		}
+	} else {
 		e.preventDefault();
-		inputError(emailInput);
-	}
-	if (checkActivities()) {
-		e.preventDefault();
-		inputError(activitiesTitle);
-	}
-	if (ccValidation()) {
-		e.preventDefault();
-		inputError(creditCardInfo);
 	}
 });
-
-// Create function for higlighting missing/incorrect input
-function inputError(inputField) {
-	inputField.style.backgroundColor = "#E65B5B";
-}
