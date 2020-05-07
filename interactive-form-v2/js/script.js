@@ -75,6 +75,10 @@ colorSelect.insertBefore(selectThemeMsg, firstColorOption);
 // Hide color options intially
 hideMultiple(colorSelect);
 
+// Select color select section for 'exceeds' requirement
+const colorSelection = document.querySelector("#colors-js-puns");
+colorSelection.className = "is-hidden";
+
 // Create handler for change in design theme dropdown
 let displayed = [];
 const designDropdown = document.querySelector("#design");
@@ -84,9 +88,13 @@ designDropdown.addEventListener("change", () => {
 		hideMultiple(colorSelect);
 		selectThemeMsg.hidden = false;
 		selectThemeMsg.selected = true;
+		// Code for 'exceeds' grade to hide color selection
+		colorSelection.className = "is-hidden";
 	} else {
 		selectThemeMsg.hidden = true;
 		selectThemeMsg.selected = false;
+		// Code for 'exceeds' grade to show color selection
+		colorSelection.className = "";
 		for (let i = 0; i < colorSelect.length; i++) {
 			if (
 				colorSelect[i].textContent.includes(
@@ -208,6 +216,10 @@ function errorMessage(message) {
 
 // Function to create and append cc error message
 function ccErrorAppend(message) {
+	const lastChild = creditCardInfo.lastElementChild;
+	if (lastChild.className === "error") {
+		creditCardInfo.removeChild(lastChild);
+	}
 	const errorLabel = errorMessage(message);
 	creditCardInfo.appendChild(errorLabel);
 }
@@ -223,6 +235,11 @@ function userInputCheck(inputField) {
 
 // Function to check name input
 function nameCheck(input) {
+	if (input.nextElementSibling.className === "error") {
+		const prevError = input.nextElementSibling;
+		const errorParent = prevError.parentNode;
+		errorParent.removeChild(prevError);
+	}
 	if (userInputCheck(input)) {
 		const errorLabel = errorMessage("Please enter your name");
 		const parent = input.parentNode;
@@ -236,7 +253,12 @@ function nameCheck(input) {
 
 // Function to check email input
 function emailCheck(input) {
-	if (!/^[^@]+@[^@.]+\.[a-z]+$/i.test(input.value)) {
+	if (input.nextElementSibling.className === "error") {
+		const prevError = input.nextElementSibling;
+		const errorParent = prevError.parentNode;
+		errorParent.removeChild(prevError);
+	}
+	if (!/^[^@]+@[^@.]+\.[a-z]{2,3}$/i.test(input.value)) {
 		const errorLabel = errorMessage("Please enter a valid email address");
 		const parent = input.parentNode;
 		const sibling = input.nextElementSibling;
@@ -249,6 +271,10 @@ function emailCheck(input) {
 
 // Create function to check activities checked property
 function checkActivities() {
+	const lastChild = activitiesSection.lastElementChild;
+	if (lastChild.className === "error") {
+		activitiesSection.removeChild(lastChild);
+	}
 	for (let i = 0; i < checkboxList.length; i++) {
 		if (checkboxList[i].checked) {
 			return true;
@@ -264,7 +290,11 @@ function ccValidation() {
 	if (userInputCheck(ccNumberInput)) {
 		ccErrorAppend("Please enter a credit card number.");
 		return false;
-	} else if (ccNumberInput.value.length < 13 || ccNumberInput.length > 16) {
+	} else if (
+		ccNumberInput.value.length < 13 ||
+		ccNumberInput.length > 16 ||
+		!/^\d+$/.test(ccNumberInput.value)
+	) {
 		ccErrorAppend(
 			"Please enter a number that is between 13 and 16 digits long"
 		);
@@ -313,16 +343,18 @@ function validateAll() {
 
 // Create handler for form submission
 confForm.addEventListener("submit", (e) => {
-	// Remove previous error messages
-	const prevError = document.querySelectorAll(".error");
-	if (prevError.length > 0) {
-		for (let i = 0; i < prevError.length; i++) {
-			const parent = prevError[i].parentNode;
-			parent.removeChild(prevError[i]);
-		}
-	}
 	// Validate user inputs
 	if (!validateAll()) {
 		e.preventDefault();
 	}
+});
+
+// Create handler for real time error messages on name input
+nameInput.addEventListener("keyup", () => {
+	nameCheck(nameInput);
+});
+
+// Create handler for real time error messages on email input
+emailInput.addEventListener("keyup", () => {
+	emailCheck(emailInput);
 });
