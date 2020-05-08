@@ -232,7 +232,7 @@ function userInputCheck(inputField) {
 }
 
 // Function to remove previous error
-function removePreviousError() {
+function removePreviousError(input) {
 	if (input.nextElementSibling.className === "error") {
 		const prevError = input.nextElementSibling;
 		const errorParent = prevError.parentNode;
@@ -242,8 +242,8 @@ function removePreviousError() {
 
 // Function to check name input
 function nameCheck(input) {
+	removePreviousError(nameInput);
 	if (userInputCheck(input)) {
-		removePreviousError();
 		const errorLabel = errorMessage("Please enter your name");
 		const parent = input.parentNode;
 		const sibling = input.nextElementSibling;
@@ -256,7 +256,7 @@ function nameCheck(input) {
 
 // Function to check email input
 function emailCheck(input) {
-	removePreviousError();
+	removePreviousError(emailInput);
 	if (!/^[^@]+@[^@.]+\.[a-z]{2,3}$/i.test(input.value)) {
 		const errorLabel = errorMessage("Please enter a valid email address");
 		const parent = input.parentNode;
@@ -291,7 +291,7 @@ function ccValidation() {
 		return false;
 	} else if (
 		ccNumberInput.value.length < 13 ||
-		ccNumberInput.length > 16 ||
+		ccNumberInput.value.length > 16 ||
 		!/^\d+$/.test(ccNumberInput.value)
 	) {
 		ccErrorAppend(
@@ -368,7 +368,7 @@ ccNumberInput.addEventListener("keyup", () => {
 		ccErrorAppend("Please enter a credit card number.");
 	} else if (
 		ccNumberInput.value.length < 13 ||
-		ccNumberInput.length > 16 ||
+		ccNumberInput.value.length > 16 ||
 		!/^\d+$/.test(ccNumberInput.value)
 	) {
 		ccErrorAppend(
