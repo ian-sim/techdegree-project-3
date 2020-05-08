@@ -114,7 +114,6 @@ designDropdown.addEventListener("change", () => {
 });
 
 // ACTIVITIES CHECKBOX SECTION
-
 // Create activitiesTotal variable and element to display total
 let activitiesTotal = 0;
 const displayTotal = createAssign(
@@ -201,7 +200,6 @@ paymentDropdown.addEventListener("change", () => {
 });
 
 // FORM VALIDATION SECTION
-
 // Function for creating and inserting validation messages
 function errorMessage(message) {
 	const errorLabel = createAssign(
@@ -233,14 +231,19 @@ function userInputCheck(inputField) {
 	}
 }
 
-// Function to check name input
-function nameCheck(input) {
+// Function to remove previous error
+function removePreviousError() {
 	if (input.nextElementSibling.className === "error") {
 		const prevError = input.nextElementSibling;
 		const errorParent = prevError.parentNode;
 		errorParent.removeChild(prevError);
 	}
+}
+
+// Function to check name input
+function nameCheck(input) {
 	if (userInputCheck(input)) {
+		removePreviousError();
 		const errorLabel = errorMessage("Please enter your name");
 		const parent = input.parentNode;
 		const sibling = input.nextElementSibling;
@@ -253,11 +256,7 @@ function nameCheck(input) {
 
 // Function to check email input
 function emailCheck(input) {
-	if (input.nextElementSibling.className === "error") {
-		const prevError = input.nextElementSibling;
-		const errorParent = prevError.parentNode;
-		errorParent.removeChild(prevError);
-	}
+	removePreviousError();
 	if (!/^[^@]+@[^@.]+\.[a-z]{2,3}$/i.test(input.value)) {
 		const errorLabel = errorMessage("Please enter a valid email address");
 		const parent = input.parentNode;
@@ -285,7 +284,7 @@ function checkActivities() {
 	return false;
 }
 
-// Create function to check payment method and required fields
+// Create function to validate credit card input fields
 function ccValidation() {
 	if (userInputCheck(ccNumberInput)) {
 		ccErrorAppend("Please enter a credit card number.");
@@ -357,4 +356,49 @@ nameInput.addEventListener("keyup", () => {
 // Create handler for real time error messages on email input
 emailInput.addEventListener("keyup", () => {
 	emailCheck(emailInput);
+});
+
+// Create handler for real time error messages on cc number input
+ccNumberInput.addEventListener("keyup", () => {
+	const lastChild = creditCardInfo.lastElementChild;
+	if (lastChild.className === "error") {
+		creditCardInfo.removeChild(lastChild);
+	}
+	if (userInputCheck(ccNumberInput)) {
+		ccErrorAppend("Please enter a credit card number.");
+	} else if (
+		ccNumberInput.value.length < 13 ||
+		ccNumberInput.length > 16 ||
+		!/^\d+$/.test(ccNumberInput.value)
+	) {
+		ccErrorAppend(
+			"Please enter a number that is between 13 and 16 digits long"
+		);
+	}
+});
+
+// Create handler for real time error messages on zip code input
+zipInput.addEventListener("keyup", () => {
+	const lastChild = creditCardInfo.lastElementChild;
+	if (lastChild.className === "error") {
+		creditCardInfo.removeChild(lastChild);
+	}
+	if (userInputCheck(zipInput)) {
+		ccErrorAppend("Please enter a zip code");
+	} else if (zipInput.value.length !== 5 || !/^\d+$/.test(zipInput.value)) {
+		ccErrorAppend("Please enter a 5 digit zip code");
+	}
+});
+
+// Create handler for real time error messages on CVV input
+cvvInput.addEventListener("keyup", () => {
+	const lastChild = creditCardInfo.lastElementChild;
+	if (lastChild.className === "error") {
+		creditCardInfo.removeChild(lastChild);
+	}
+	if (userInputCheck(cvvInput)) {
+		ccErrorAppend("Please enter a CVV number");
+	} else if (cvvInput.value.length !== 3 || !/^\d+$/.test(cvvInput.value)) {
+		ccErrorAppend("Please enter a 3 digit CVV number");
+	}
 });
